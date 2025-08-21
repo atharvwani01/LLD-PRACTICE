@@ -1,4 +1,4 @@
-package good;
+package StrategyPattern.good;
 
 class NormalDriveStrategy implements DriveStrategy {
     public void drive(Stats s) {

@@ -1,4 +1,4 @@
-package good;
+package StrategyPattern.good;
 
 class OffRoadVehicle extends Vehicle {
     public OffRoadVehicle() {

@@ -1,4 +1,4 @@
-package good;
+package StrategyPattern.good;
 
 class OffRoadDriveStrategy implements DriveStrategy {
     public void drive(Stats s) {

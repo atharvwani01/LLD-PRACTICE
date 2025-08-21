@@ -1,4 +1,4 @@
-package good;
+package StrategyPattern.good;
 
 //(Decorator for cross-cutting concerns), dont worry much about this, Genius Atharv has applied some magic !
 class LoggingDriveStrategy implements DriveStrategy {

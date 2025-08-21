@@ -1,4 +1,4 @@
-package bad;
+package StrategyPattern.bad;
 
 
 public class DemoBad {

@@ -1,4 +1,4 @@
-package good;
+package StrategyPattern.good;
 
 // src/strategy/DemoGood.java
 public class DemoGood {

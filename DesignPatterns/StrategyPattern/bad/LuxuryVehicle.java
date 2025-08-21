@@ -1,4 +1,4 @@
-package bad;
+package StrategyPattern.bad;
 
 public class LuxuryVehicle extends Vehicle {
     //Now i want that this luxury car should also be fast, so i copy the fast logic from SportsVehicle &

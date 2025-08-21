@@ -1,4 +1,4 @@
-package bad;
+package StrategyPattern.bad;
 
 public class Vehicle {
     protected double baseSpeed = 80;
@@ -6,7 +6,6 @@ public class Vehicle {
     protected double fuelLitres = 40;
 
     void drive(){
-
         // "Normal" Drive logic(some random logic)
         double speed = baseSpeed;
         double burn = speed * 0.005;

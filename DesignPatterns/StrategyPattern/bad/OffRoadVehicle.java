@@ -1,8 +1,7 @@
-package bad;
+package StrategyPattern.bad;
 
 // src/bad/OffRoadVehicle.java
 class OffRoadVehicle extends Vehicle {
-
 
     //This class is good till now, it has its own logic
     @Override

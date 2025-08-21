@@ -1,4 +1,4 @@
-package good;
+package StrategyPattern.good;
 
 //Now for each class type or behaviour i define a strategy, Alright, i will do it now
 interface DriveStrategy {

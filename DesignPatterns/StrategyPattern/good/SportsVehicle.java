@@ -1,4 +1,4 @@
-package good;
+package StrategyPattern.good;
 
 // src/strategy/SportsVehicle.java
 class SportsVehicle extends Vehicle {
