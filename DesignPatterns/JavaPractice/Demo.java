@@ -244,10 +244,10 @@ public class Demo {
         Food junkfood = new JunkFood();
         junkfood.inmethod();
 
-        Integer a = 9;
+        Integer a1 = 9;
         int b = 9;
 
-        if(a == b){
+        if(a1 == b){
             System.out.println("BOTH ARE SAME");
         }
 
