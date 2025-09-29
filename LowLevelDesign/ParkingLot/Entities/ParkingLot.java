@@ -13,7 +13,7 @@ public class ParkingLot {
 
     private static ParkingLot instance;
     private final List<ParkingFloor> parkingFloors = new ArrayList<>();
-    private final Map<String, ParkingTicket> activeParkingTickets;
+    private final Map<String, ParkingTicket> activeParkingTickets;      // Its a map of vehicle no and parking ticket
     private FeeStrategy feeStrategy;
     private ParkingStrategy parkingStrategy;
 

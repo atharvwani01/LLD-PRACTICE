@@ -89,6 +89,10 @@ public class Elevator implements Runnable{
     @Override
     public void run() {
         while (isRunning) {
+            System.out.println("Elevator " + id + " running - Current State: " +
+                    state.getClass().getSimpleName() +
+                    " - Up Requests: " + upRequests.size() +
+                    " - Down Requests: " + downRequests.size());
             move();
             try {
                 Thread.sleep(1000); // Simulate movement time
