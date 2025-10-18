@@ -1,0 +1,301 @@
+package LowLevelDesign.ATM_AtharvWani;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
+
+class Account{
+    String accountNo;
+    int balance;
+    public Account(String accountNo, int balance){
+        this.accountNo = accountNo;
+        this.balance = balance;
+    }
+}
+class Card {
+    String cardNo;
+    String pin;
+    Account account;
+
+    public Card(String cardNo, String pin, Account account) {
+        this.cardNo = cardNo;
+        this.pin = pin;
+        this.account = account;
+    }
+}
+interface CashDispenser{
+    boolean dispense(int amount);
+    void setNextDispenser(CashDispenser cashDispenser);
+}
+class HundredDispenser implements CashDispenser {
+    int count;
+    CashDispenser nextDispenser;
+
+    public HundredDispenser(int count) {
+        this.count = count;
+        this.nextDispenser = null;
+    }
+
+    @Override
+    public boolean dispense(int amount) {
+        int notesNeeded = amount / 100;
+        int notes = Math.min(count, notesNeeded);
+        int remaining = amount - (notes * 100);
+
+        int originalCount = count; // save for rollback
+        count -= notes;
+
+        if (remaining == 0) {
+            System.out.println("Dispensed " + notes + " of 100rs");
+            return true;
+        }
+
+        boolean success = nextDispenser != null && nextDispenser.dispense(remaining);
+
+        if (success) {
+            System.out.println("Dispensed " + notes + " of 100rs");
+            return true;
+        } else {
+            count = originalCount; // rollback
+            return false;
+        }
+    }
+
+    @Override
+    public void setNextDispenser(CashDispenser cashDispenser) {
+        this.nextDispenser = cashDispenser;
+    }
+}
+class FiftyDispenser implements CashDispenser {
+    int count;
+    CashDispenser nextDispenser;
+
+    public FiftyDispenser(int count) {
+        this.count = count;
+        this.nextDispenser = null;
+    }
+
+    @Override
+    public boolean dispense(int amount) {
+        int notesNeeded = amount / 50;
+        int notes = Math.min(count, notesNeeded);
+        int remaining = amount - (notes * 50);
+
+        int originalCount = count;
+        count -= notes;
+
+        if (remaining == 0) {
+            System.out.println("Dispensed " + notes + " of 50rs");
+            return true;
+        }
+
+        boolean success = nextDispenser != null && nextDispenser.dispense(remaining);
+
+        if (success) {
+            System.out.println("Dispensed " + notes + " of 50rs");
+            return true;
+        } else {
+            count = originalCount; // rollback
+            return false;
+        }
+    }
+
+    @Override
+    public void setNextDispenser(CashDispenser cashDispenser) {
+        this.nextDispenser = cashDispenser;
+    }
+}
+class OneDispenser implements CashDispenser {
+    int count;
+    CashDispenser nextDispenser;
+
+    public OneDispenser(int count) {
+        this.count = count;
+        this.nextDispenser = null;
+    }
+
+    @Override
+    public boolean dispense(int amount) {
+        int notesNeeded = amount / 1;
+        int notes = Math.min(count, notesNeeded);
+        int remaining = amount - (notes * 1);
+
+        int originalCount = count;
+        count -= notes;
+
+        if (remaining == 0) {
+            System.out.println("Dispensed " + notes + " of 1rs");
+            return true;
+        }
+
+        boolean success = nextDispenser != null && nextDispenser.dispense(remaining);
+
+        if (success) {
+            System.out.println("Dispensed " + notes + " of 1rs");
+            return true;
+        } else {
+            count = originalCount; // rollback
+            return false;
+        }
+    }
+
+    @Override
+    public void setNextDispenser(CashDispenser cashDispenser) {
+        this.nextDispenser = cashDispenser;
+    }
+}
+
+interface ATMState{
+    void injectCard(ATM atm, Card card, String pin);
+    void withdraw(ATM atm, int amount);
+    void checkBalance(ATM atm);
+    void ejectCard(ATM atm);
+}
+class IdleState implements ATMState{
+
+    @Override
+    public void injectCard(ATM atm, Card card, String pin) {
+        System.out.println("Welcome to ATM and I see the card is injected, Checking pin...");
+        if(Objects.equals(card.pin, pin)){
+            System.out.println("Correct Pin !");
+            atm.currentCard = card;
+            atm.atmState = new AuthenticatedState();
+        }
+        else {
+            System.out.println("Incorrect Pin !");
+            atm.currentCard = null;
+            atm.atmState = new IdleState();
+        }
+    }
+
+    @Override
+    public void withdraw(ATM atm, int amount) {
+        System.out.println("Pls insert the card !");
+    }
+
+    @Override
+    public void checkBalance(ATM atm) {
+        System.out.println("Pls insert the card !");
+    }
+
+    @Override
+    public void ejectCard(ATM atm) {
+        System.out.println("Pls insert the card !");
+        atm.atmState = new IdleState();
+        atm.currentCard = null;
+    }
+}
+class AuthenticatedState implements ATMState{
+
+    @Override
+    public void injectCard(ATM atm, Card card, String pin) {
+        System.out.println("Card inserted & verified, pls perform withdraw or check the balance");
+    }
+
+    @Override
+    public void withdraw(ATM atm, int amount) {
+        Account account = atm.currentCard.account;
+        if(account.balance > amount){
+            System.out.println("Dispensing.....");
+            if(atm.atmCashDispenser.dispense(amount)) {
+                account.balance -= amount;
+                System.out.println("Pls collect the amount " + amount + " ...");
+            }
+            else{
+                System.out.println("ATM cant process this request, insufficient cash !");
+            }
+
+        }
+        else{
+            System.out.println("Insufficient balance !, Pls try again");
+        }
+    }
+
+    @Override
+    public void checkBalance(ATM atm) {
+        System.out.println("Checking your balance ....");
+        System.out.println("Balance is " + atm.currentCard.account.balance);
+    }
+
+    @Override
+    public void ejectCard(ATM atm) {
+        System.out.println("Ejecting the card ...");
+        atm.atmState = new IdleState();
+        atm.currentCard = null;
+    }
+}
+
+class ATM{
+    private static volatile ATM instance;
+    Map<String, Account> accounts = new HashMap<>();
+    Map<String, Card> cards = new HashMap<>();
+    ATMState atmState;
+    Card currentCard;
+    CashDispenser atmCashDispenser;
+
+    private ATM() {
+        this.atmState = new IdleState();
+        this.currentCard = null;
+        this.atmCashDispenser = null;
+        initialiseDispensers();
+        initialiseCardsAndAccount();
+    }
+
+    private void initialiseDispensers() {
+        atmCashDispenser = new HundredDispenser(10);
+        FiftyDispenser fiftyDispenser = new FiftyDispenser(5);
+        OneDispenser oneDispenser = new OneDispenser(40);
+        atmCashDispenser.setNextDispenser(fiftyDispenser);
+        fiftyDispenser.setNextDispenser(oneDispenser);
+    }
+
+    private void initialiseCardsAndAccount() {
+
+        Account account1 = new Account("A123ghjk", 900);
+        Account account2 = new Account("A123g3hjk", 1500);
+
+        Card card1 = new Card("123456", "6792", account1);
+        Card card2 = new Card("09878", "1234", account2);
+
+        accounts.put(account1.accountNo, account1);
+        accounts.put(account2.accountNo, account2);
+        cards.put(card1.cardNo, card1);
+        cards.put(card2.cardNo, card2);
+
+    }
+
+    public synchronized static ATM getInstance(){
+        if(instance == null)
+            instance = new ATM();
+        return instance;
+    }
+
+    public void insertCard(String cardNo, String pin){
+        atmState.injectCard(this, cards.get(cardNo), pin);
+    }
+
+    public void checkBalance(){
+        atmState.checkBalance(this);
+    }
+
+    public void withdraw(int amount){
+        atmState.withdraw(this, amount);
+    }
+
+    public void removeCard(){
+        atmState.ejectCard(this);
+    }
+
+}
+
+public class Solution {
+    public static void main(String[] args) {
+        ATM atm = ATM.getInstance();
+        atm.insertCard("09878", "1234");
+        atm.checkBalance();
+        atm.withdraw(90);
+        atm.checkBalance();
+        atm.removeCard();
+
+    }
+}
