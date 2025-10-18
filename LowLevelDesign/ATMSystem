@@ -1,5 +1,12 @@
 package LowLevelDesign.ATM_AtharvWani;
 
+//User should be able to insert the card
+//Once authenticated via pin of the card he should be able to withdraw the cash & check balance
+//ATM should follow chain of responsibility when dispensing the money 100, 50, 1
+//If the chain fails rollback the count as well
+//User can eject the card, and should get error if withdrawl request is more than the account balance
+
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
