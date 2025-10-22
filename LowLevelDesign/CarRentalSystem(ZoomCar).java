@@ -1,6 +1,12 @@
 package LowLevelDesign.CarRental_AtharvWani;
 
+//Register users and cars in the system
+//User should be able to search for available vehicles based on names and date range
+//User can reserve cars in the date range
+//Users can pay through UPI, Credit Card, Debit Card for the associated cost of vehicle
+
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -11,24 +17,24 @@ enum PayMethods{
     UPI, CREDIT_CARD, DEBIT_CARD
 }
 interface PaymentStrategy{
-    void pay();
+    void pay(Reservation reservation);
 }
 class UPI implements PaymentStrategy{
     @Override
-    public void pay() {
-        System.out.println("Paying using UPI");
+    public void pay(Reservation reservation) {
+        System.out.println("Paying using UPI " + reservation.totalCost + "rs");
     }
 }
 class CreditCard implements PaymentStrategy{
     @Override
-    public void pay() {
-        System.out.println("Paying using Credit Card");
+    public void pay(Reservation reservation) {
+        System.out.println("Paying using Credit Card" + reservation.totalCost + "rs");
     }
 }
 class DebitCard implements PaymentStrategy{
     @Override
-    public void pay() {
-        System.out.println("Paying using Debit Card");
+    public void pay(Reservation reservation) {
+        System.out.println("Paying using Debit Card" + reservation.totalCost + "rs");
     }
 }
 class PaymentFactory{
@@ -98,12 +104,14 @@ class Reservation{
     Vehicle vehicle;
     LocalDate startTime;
     LocalDate endTime;
+    double totalCost;
     public Reservation(User user,Vehicle vehicle,LocalDate start,LocalDate end){
         this.id = UUID.randomUUID().toString();
         this.user = user;
         this.vehicle = vehicle;
         this.startTime = start;
         this.endTime = end;
+        this.totalCost = ChronoUnit.DAYS.between(start, end) * vehicle.charge;
     }
 }
 class CarRentalSystem{
@@ -178,7 +186,7 @@ public class Solution{
         Reservation reservation = carRentalSystem.reserve(useratharv, vehicleinnova, LocalDate.now(), LocalDate.now().plusDays(3));
 
         useratharv.setPaymentStrategy(PayMethods.UPI);
-        useratharv.paymentStrategy.pay();
+        useratharv.paymentStrategy.pay(reservation);
 
     }
 }
