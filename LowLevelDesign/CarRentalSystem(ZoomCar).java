@@ -4,7 +4,7 @@ package LowLevelDesign.CarRental_AtharvWani;
 //User should be able to search for available vehicles based on names and date range
 //User can reserve cars in the date range
 //Users can pay through UPI, Credit Card, Debit Card for the associated cost of vehicle
-//User get notifications 
+//User specific notifications, also keeping the history of notifications
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
@@ -24,6 +24,7 @@ class UPI implements PaymentStrategy{
     @Override
     public void pay(Reservation reservation) {
         System.out.println("Paying using UPI " + reservation.totalCost + "rs");
+        reservation.user.notify(new Notification("User [" +reservation.user.name + "] your payment for car " + reservation.vehicle.model + " is Successful !"));
     }
 }
 class CreditCard implements PaymentStrategy{
