@@ -4,6 +4,7 @@ package LowLevelDesign.CarRental_AtharvWani;
 //User should be able to search for available vehicles based on names and date range
 //User can reserve cars in the date range
 //Users can pay through UPI, Credit Card, Debit Card for the associated cost of vehicle
+//User get notifications 
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
